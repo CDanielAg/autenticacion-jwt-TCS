@@ -1,3 +1,4 @@
+import { readFile } from 'node:fs/promises';
 import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
 import { createServer } from 'node:http';
 
@@ -79,8 +80,20 @@ async function login(request, response) {
   return reply(response, 200, { access_token: issueToken(), token_type: 'Bearer', expires_in: lifetime });
 }
 
+const assets = new Map([
+  ['/', ['index.html', 'text/html']],
+  ['/style.css', ['style.css', 'text/css']],
+  ['/app.js', ['app.js', 'text/javascript']],
+]);
+
 createServer(async (request, response) => {
   try {
+    const asset = assets.get(request.url);
+    if (request.method === 'GET' && asset) {
+      const [file, type] = asset;
+      const content = await readFile(new URL('./web/' + file, import.meta.url));
+      return response.writeHead(200, { 'Content-Type': type + '; charset=utf-8' }).end(content);
+    }
     if (request.method === 'POST' && request.url === '/api/auth/login') {
       return await login(request, response);
     }

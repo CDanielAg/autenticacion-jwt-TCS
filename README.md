@@ -24,3 +24,10 @@ La API escucha en `http://127.0.0.1:4176`. La clave de firma se genera al inicia
 ```
 
 Oculta el valor del token en las capturas.
+
+## Interfaz web
+
+Abre `http://127.0.0.1:4176/`, inicia sesión con la cuenta de prueba y usa los
+botones del perfil para comparar las respuestas con y sin Bearer. En **Red**
+de las herramientas del navegador puedes ver el JWT en la respuesta del login
+y el encabezado `Authorization` de la consulta autorizada.
